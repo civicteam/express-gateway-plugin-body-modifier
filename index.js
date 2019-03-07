@@ -58,7 +58,7 @@ const plugin = {
               if (err) return next(err);
 
               if (params.request) {
-                const bodyData = JSON.stringify(transformBody(params.request, req.egContext, req.body));
+                const bodyData = JSON.stringify(transformBody(params.request.body, req.egContext, req.body));
                 req.headers['content-length'] = Buffer.byteLength(bodyData);
                 req.egContext.requestStream = new PassThrough();
                 req.egContext.requestStream.write(bodyData);
@@ -68,7 +68,13 @@ const plugin = {
                 const _write = res.write;
                 res.write = (data) => {
                   try {
-                    const body = transformBody(params.response, req.egContext, JSON.parse(data));
+                    const parsedData = JSON.parse(data);
+                    if (params.response.headers && params.response.headers.add['X-External-ID']) {
+                      if (parsedData && parsedData.externalId) {
+                        res.setheader('X-External-ID', parsedData.externalId);
+                      }
+                    }
+                    const body = transformBody(params.response.body, req.egContext, parsedData);
                     const bodyData = JSON.stringify(body);
 
                     res.setHeader('Content-Length', Buffer.byteLength(bodyData));

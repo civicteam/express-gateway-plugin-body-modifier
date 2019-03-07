@@ -23,18 +23,23 @@ policies:
   - body-modifier:
       action:
         request:
-          add:
-          - name: fullname
-            value: req.body.name + ' ' + req.body.surname
-          remove:
-          - name
-          - surname
+          body:
+            add:
+            - name: fullname
+              value: req.body.name + ' ' + req.body.surname
+            remove:
+            - name
+            - surname
         response:
-          add:
-          - name: createdBy
-            value: "'Clark Kent'"
-          remove:
-          - uselessParam
+          body:
+            add:
+            - name: createdBy
+              value: "'Clark Kent'"
+            remove:
+            - uselessParam
+          headers:
+            add:
+              - externalId
 ```
 
 ## Want to make your own plugin?
