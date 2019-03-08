@@ -1,6 +1,6 @@
 {
   "name": "express-gateway-plugin-body-modifier-example",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "description": "A body modifier plugin for Express Gateway",
   "main": "index.js",
   "scripts": {
