@@ -44,8 +44,12 @@ const plugin = {
       policy: params => {
 
         const transformBody = (transformSpecs, egContext, body) => {
-          transformSpecs.add.forEach(addParam => { body[addParam.name] = egContext.run(addParam.value); });
-          transformSpecs.remove.forEach(removeParam => { delete body[removeParam]; });
+          if (transformSpecs.add) {
+            transformSpecs.add.forEach(addParam => { body[addParam.name] = egContext.run(addParam.value); });
+          }
+          if (transformSpecs.remove) {
+            transformSpecs.remove.forEach(removeParam => { delete body[removeParam]; });
+          }
 
           return body;
         };
@@ -69,10 +73,11 @@ const plugin = {
                 res.write = (data) => {
                   try {
                     const parsedData = JSON.parse(data);
-                    if (params.response.headers && params.response.headers.add['X-External-ID']) {
-                      if (parsedData && parsedData.externalId) {
-                        res.setheader('X-External-ID', parsedData.externalId);
+                    if (params.response.headers ) {
+                      if (params.response.headers.add.includes('X-External-ID') && parsedData && parsedData.externalId) {
+                        res.setHeader('X-External-ID', parsedData.externalId);
                       }
+                      // TODO implement other headers modifier functions if necessary
                     }
                     const body = transformBody(params.response.body, req.egContext, parsedData);
                     const bodyData = JSON.stringify(body);
