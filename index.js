@@ -77,6 +77,9 @@ const plugin = {
                       if (params.response.headers.add.includes('X-External-ID') && parsedData && parsedData.externalId) {
                         res.setHeader('X-External-ID', parsedData.externalId);
                       }
+                      if (params.response.headers.add.includes('X-Civic-FlowId') && parsedData && parsedData.externalId) {
+                        res.setHeader('X-Civic-FlowId', parsedData.externalId);
+                      }
                       // TODO implement other headers modifier functions if necessary
                     }
                     const body = transformBody(params.response.body, req.egContext, parsedData);
